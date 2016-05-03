@@ -183,6 +183,11 @@ class Message(object):
 
     def _get_first_webhook(self):
         hooks = self._client.api.hooks_list()
+
+        # Remove hooks from other users
+        my_id = self._client.user['id']
+        hooks = list(filter(lambda h: h['user_id'] == my_id, hooks))
+
         if not hooks:
             for channel in self._client.api.get_channels():
                 if channel.get('name') == 'town-square':
